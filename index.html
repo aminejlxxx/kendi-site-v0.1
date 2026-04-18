@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Association des Jeunes Al Kendi — Devenez sponsor et investissez dans l'avenir d'une génération de talents." />
+  <title>AJK — Association des Jeunes Al Kendi | Devenez sponsor</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ajk: {
+              blue:   '#1E3A8A',
+              blueDk: '#0F1F4F',
+              blueLt: '#2E4FB8',
+              green:  '#1FA35C',
+              greenDk:'#148045',
+              greenLt:'#3DC779',
+              ink:    '#0A0F2C',
+              paper:  '#F6F8FB',
+              gold:   '#D4A545',
+            }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+            body:    ['Inter', 'system-ui', 'sans-serif'],
+          },
+          keyframes: {
+            float: {
+              '0%,100%': { transform: 'translateY(12px)' },
+              '50%':     { transform: 'translateY(-8px)' },
+            },
+            shimmer: {
+              '0%':   { backgroundPosition: '-200% 0' },
+              '100%': { backgroundPosition: '200% 0' },
+            },
+            pulseRing: {
+              '0%':   { transform: 'scale(0.9)', opacity: 0.6 },
+              '100%': { transform: 'scale(1.6)', opacity: 0 },
+            },
+            gradientShift: {
+              '0%,100%': { backgroundPosition: '0% 50%' },
+              '50%':     { backgroundPosition: '100% 50%' },
+            },
+            aurora: {
+              '0%,100%': { transform: 'translate(0,0) scale(1)' },
+              '33%':     { transform: 'translate(40px,-30px) scale(1.15)' },
+              '66%':     { transform: 'translate(-30px,20px) scale(0.95)' },
+            },
+          },
+          animation: {
+            float: 'float 5s ease-in-out infinite',
+            shimmer: 'shimmer 3s linear infinite',
+            pulseRing: 'pulseRing 2.4s ease-out infinite',
+            gradientShift: 'gradientShift 10s ease infinite',
+            aurora: 'aurora 14s ease-in-out infinite',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- React + ReactDOM + Babel -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Framer Motion -->
+  <script src="https://unpkg.com/framer-motion@11.0.8/dist/framer-motion.js"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #F6F8FB;
+      color: #0A0F2C;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Focus indicators — WCAG 2.4.7 */
+    :focus-visible {
+      outline: 3px solid #1FA35C;
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+    /* Skip-to-content link for keyboard users */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 1rem;
+      background: #1E3A8A;
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0 0 0.75rem 0.75rem;
+      z-index: 100;
+      font-weight: 600;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* Aurora blobs for hero background */
+    .aurora-blob {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(90px);
+      opacity: 0.55;
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    /* Animated gradient text */
+    .gradient-text {
+      background: linear-gradient(90deg, #1FA35C 0%, #2E4FB8 50%, #1FA35C 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientShift 10s ease infinite;
+    }
+    .gold-shimmer {
+      background: linear-gradient(90deg, #D4A545 0%, #FFE08A 25%, #D4A545 50%, #FFE08A 75%, #D4A545 100%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 3s linear infinite;
+    }
+
+    /* Glass cards */
+    .glass {
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    .glass-dark {
+      background: rgba(15, 31, 79, 0.55);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Sponsor tier card glow */
+    .tier-glow::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: inherit;
+      padding: 2px;
+      background: linear-gradient(135deg, #D4A545, #FFE08A, #D4A545, #B8872E);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Scroll-marquee strip */
+    .marquee {
+      display: flex;
+      gap: 3rem;
+      animation: marquee 30s linear infinite;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* Noise texture */
+    .noise::after {
+      content:'';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+      opacity: 0.6;
+      pointer-events: none;
+      mix-blend-mode: overlay;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Aller au contenu principal</a>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef, forwardRef, createElement } = React;
+
+    // Resolve Framer Motion no matter which global it exposes, with a plain-HTML fallback
+    const FM = window.Motion || window.FramerMotion || window.framerMotion || {};
+
+    // M proxy: M.div, M.article, M.img, ... → real motion component if available,
+    // otherwise a passthrough plain element that ignores motion-only props.
+    const MOTION_PROPS = new Set([
+      'initial','animate','exit','transition','variants','whileHover','whileTap',
+      'whileInView','whileFocus','whileDrag','viewport','layout','layoutId',
+      'drag','dragConstraints','style'
+    ]);
+    const makePassthrough = (tag) => forwardRef((props, ref) => {
+      const { children, style, ...rest } = props || {};
+      const clean = {};
+      for (const k in rest) if (!MOTION_PROPS.has(k)) clean[k] = rest[k];
+      // Keep only serializable style values (drop MotionValue-likes)
+      let cleanStyle = undefined;
+      if (style && typeof style === 'object') {
+        cleanStyle = {};
+        for (const k in style) {
+          const v = style[k];
+          if (typeof v !== 'object' || v === null) cleanStyle[k] = v;
+        }
+      }
+      return createElement(tag, { ref, style: cleanStyle, ...clean }, children);
+    });
+    const passthroughCache = {};
+    const M = new Proxy({}, {
+      get: (_, tag) => {
+        if (FM.motion && FM.motion[tag]) return FM.motion[tag];
+        if (!passthroughCache[tag]) passthroughCache[tag] = makePassthrough(tag);
+        return passthroughCache[tag];
+      }
+    });
+    const AP = FM.AnimatePresence || (({children}) => children);
+    const useScrollFM = FM.useScroll || (() => ({ scrollYProgress: { get: () => 0 } }));
+    const useTransformFM = FM.useTransform || ((v, i, o) => (o ? o[0] : 0));
+    const useInViewFM = FM.useInView || (() => true);
+
+    /* ------------------------------------------------------------------
+     * SMALL UI PRIMITIVES
+     * ------------------------------------------------------------------ */
+
+    const Container = ({ children, className = '' }) => (
+      <div className={`mx-auto w-full max-w-7xl px-6 md:px-10 ${className}`}>{children}</div>
+    );
+
+    const SectionEyebrow = ({ children }) => (
+      <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-ajk-green">
+        <span className="h-px w-8 bg-ajk-green/60" aria-hidden="true"></span>
+        {children}
+      </p>
+    );
+
+    const Reveal = ({ children, delay = 0, y = 24 }) => {
+      const ref = useRef(null);
+      const inView = useInViewFM(ref, { once: true, margin: "-80px" });
+      return (
+        <M.div
+          ref={ref}
+          initial={{ opacity: 0, y }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {children}
+        </M.div>
+      );
+    };
+
+    const Magnetic = ({ children, className = '' }) => {
+      const ref = useRef(null);
+      const [t, setT] = useState({ x: 0, y: 0 });
+      const onMove = (e) => {
+        const r = ref.current.getBoundingClientRect();
+        const x = (e.clientX - (r.left + r.width / 2)) * 0.18;
+        const y = (e.clientY - (r.top + r.height / 2)) * 0.18;
+        setT({ x, y });
+      };
+      return (
+        <M.div
+          ref={ref}
+          onMouseMove={onMove}
+          onMouseLeave={() => setT({ x: 0, y: 0 })}
+          animate={{ x: t.x, y: t.y }}
+          transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.3 }}
+          className={className}
+        >
+          {children}
+        </M.div>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * NAVIGATION
+     * ------------------------------------------------------------------ */
+
+    const NAV = [
+      { href: '#mission', label: 'Mission' },
+      { href: '#activites', label: 'Activités' },
+      { href: '#evenements', label: 'Événements' },
+      { href: '#sponsoring', label: 'Sponsoring' },
+      { href: '#contact', label: 'Contact' },
+    ];
+
+    const Header = () => {
+      const [scrolled, setScrolled] = useState(false);
+      const [open, setOpen] = useState(false);
+      useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 20);
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+      }, []);
+
+      return (
+        <header
+          className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+            scrolled ? 'py-2' : 'py-4'
+          }`}
+          role="banner"
+        >
+          <Container>
+            <div className={`flex items-center justify-between rounded-2xl transition-all duration-300 ${
+              scrolled ? 'glass shadow-lg shadow-ajk-blue/5 px-4 py-2' : 'bg-transparent px-2 py-2'
+            }`}>
+              <a href="#" className="flex items-center gap-3" aria-label="Retour à l'accueil AJK">
+                <img src="assets/logo-NB.png" alt="" className="h-10 w-auto drop-shadow-sm" />
+                <span className="hidden sm:flex flex-col leading-tight">
+                  <span className="font-display text-sm font-bold text-ajk-blue">AJK</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-ajk-green">Association des Jeunes Al Kendi</span>
+                </span>
+              </a>
+
+              <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-1">
+                {NAV.map(n => (
+                  <a key={n.href} href={n.href}
+                     className="group relative px-3 py-2 text-sm font-medium text-ajk-ink/80 hover:text-ajk-blue focus-visible:text-ajk-blue transition-colors duration-200">
+                    <span className="relative z-10 inline-block transition-transform duration-200 group-hover:-translate-y-0.5">
+                      {n.label}
+                    </span>
+                    {/* Soft pill background on hover */}
+                    <span aria-hidden="true"
+                          className="absolute inset-0 rounded-full bg-ajk-blue/5 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200"></span>
+                    {/* Gradient underline sliding in */}
+                    <span aria-hidden="true"
+                          className="absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-ajk-green via-ajk-blue to-ajk-gold origin-left scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100 transition-transform duration-300 ease-out"></span>
+                  </a>
+                ))}
+                <a href="#sponsoring"
+                   className="ml-2 inline-flex items-center gap-2 rounded-full bg-ajk-blue px-4 py-2 text-sm font-semibold text-white shadow-md shadow-ajk-blue/30 hover:bg-ajk-blueDk transition-all">
+                  Devenir sponsor
+                  <span aria-hidden="true">→</span>
+                </a>
+              </nav>
+
+              <button
+                className="md:hidden rounded-lg p-2 text-ajk-blue hover:bg-white/60"
+                onClick={() => setOpen(v => !v)}
+                aria-expanded={open}
+                aria-controls="mobile-menu"
+                aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  {open ? (<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>)
+                        : (<><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>)}
+                </svg>
+              </button>
+            </div>
+
+            <AP>
+              {open && (
+                <M.div
+                  id="mobile-menu"
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="md:hidden mt-2 glass rounded-2xl p-4 shadow-xl"
+                >
+                  <ul className="flex flex-col gap-1">
+                    {NAV.map(n => (
+                      <li key={n.href}>
+                        <a href={n.href}
+                           onClick={() => setOpen(false)}
+                           className="block rounded-lg px-4 py-3 text-base font-medium text-ajk-ink hover:bg-ajk-blue/10">
+                          {n.label}
+                        </a>
+                      </li>
+                    ))}
+                    <li>
+                      <a href="#sponsoring"
+                         onClick={() => setOpen(false)}
+                         className="mt-2 block rounded-lg bg-ajk-blue px-4 py-3 text-center text-base font-semibold text-white">
+                        Devenir sponsor
+                      </a>
+                    </li>
+                  </ul>
+                </M.div>
+              )}
+            </AP>
+          </Container>
+        </header>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * HERO
+     * ------------------------------------------------------------------ */
+
+    const Hero = () => {
+      const { scrollYProgress } = useScrollFM();
+      const yBg = useTransformFM(scrollYProgress, [0, 0.5], [0, -150]);
+      const scaleBadge = useTransformFM(scrollYProgress, [0, 0.3], [1, 0.85]);
+
+      return (
+        <section
+          className="relative overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32"
+          aria-label="Introduction — Association des Jeunes Al Kendi"
+        >
+          {/* Animated aurora background */}
+          <M.div style={{ y: yBg }} className="absolute inset-0 noise">
+            <div className="aurora-blob animate-aurora" style={{ top: '-10%', left: '-5%', width: '45vw', height: '45vw', background: 'radial-gradient(circle, #1FA35C55 0%, transparent 70%)' }}></div>
+            <div className="aurora-blob animate-aurora" style={{ top: '20%', right: '-10%', width: '50vw', height: '50vw', background: 'radial-gradient(circle, #2E4FB866 0%, transparent 70%)', animationDelay: '-4s' }}></div>
+            <div className="aurora-blob animate-aurora" style={{ bottom: '-20%', left: '30%', width: '40vw', height: '40vw', background: 'radial-gradient(circle, #D4A54544 0%, transparent 70%)', animationDelay: '-8s' }}></div>
+          </M.div>
+
+          <Container className="relative">
+            <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
+              {/* Left */}
+              <div className="relative z-10">
+                <M.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.22,1,0.36,1] }}
+                >
+                  <span className="inline-flex items-center gap-2 rounded-full border border-ajk-green/40 bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-ajk-green shadow-sm">
+                    <span className="h-2 w-2 rounded-full bg-ajk-green animate-pulse"></span>
+                    Dossier de sponsoring — 2026
+                  </span>
+                </M.div>
+
+                <h1 className="mt-6 font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] text-ajk-ink">
+                  Investir dans la jeunesse,
+                  <br />
+                  <span className="gradient-text">c'est investir dans l'avenir.</span>
+                </h1>
+
+                <M.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25, duration: 0.7 }}
+                  className="mt-6 max-w-xl text-lg text-ajk-ink/70 leading-relaxed"
+                >
+                  Devenez partenaire de l'<strong>Association des Jeunes Al Kendi</strong> et
+                  positionnez votre marque au cœur d'une communauté éducative influente —
+                  formée aux métiers de l'intelligence artificielle, du développement et du management.
+                </M.p>
+
+                <M.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.45, duration: 0.7 }}
+                  className="mt-10 flex flex-wrap items-center gap-4"
+                >
+                  <Magnetic>
+                    <a href="#sponsoring"
+                       className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-ajk-blue px-7 py-4 font-semibold text-white shadow-xl shadow-ajk-blue/30 transition-all hover:shadow-2xl hover:shadow-ajk-blue/40">
+                      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full"></span>
+                      <span>Voir les formules de sponsoring</span>
+                      <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">→</span>
+                    </a>
+                  </Magnetic>
+                  <a href="#mission"
+                     className="inline-flex items-center gap-2 rounded-full border border-ajk-ink/15 bg-white/80 px-6 py-4 font-semibold text-ajk-ink hover:border-ajk-blue/40 hover:bg-white transition-all">
+                    Découvrir l'association
+                  </a>
+                </M.div>
+
+                {/* Key metrics */}
+                <M.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8, duration: 0.8 }}
+                  className="mt-12 grid grid-cols-3 gap-4 max-w-xl"
+                >
+                  {[
+                    { n: '3', l: 'Filières synergiques' },
+                    { n: '5+', l: 'Événements annuels' },
+                    { n: '100%', l: 'Impact étudiant' },
+                  ].map((s, i) => (
+                    <div key={i} className="rounded-2xl glass p-4 text-center">
+                      <div className="font-display text-2xl sm:text-3xl font-bold text-ajk-blue">{s.n}</div>
+                      <div className="mt-1 text-xs font-medium uppercase tracking-wider text-ajk-ink/60">{s.l}</div>
+                    </div>
+                  ))}
+                </M.div>
+              </div>
+
+              {/* Right — Logo showcase */}
+              <M.div
+                style={{ scale: scaleBadge }}
+                className="relative flex items-center justify-center"
+              >
+                <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 flex items-center justify-center">
+                  {/* Pulsing rings */}
+                  <div className="absolute inset-0 rounded-full border-2 border-ajk-green/40 animate-pulseRing"></div>
+                  <div className="absolute inset-0 rounded-full border-2 border-ajk-blue/30 animate-pulseRing" style={{ animationDelay: '0.6s' }}></div>
+                  <div className="absolute inset-0 rounded-full border-2 border-ajk-green/20 animate-pulseRing" style={{ animationDelay: '1.2s' }}></div>
+
+                  {/* Orbiting dots */}
+                  <M.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 20, ease: 'linear' }}
+                    className="absolute -inset-10 rounded-full"
+                  >
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 h-4 w-4 rounded-full bg-ajk-green shadow-lg shadow-ajk-green/60"></div>
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-ajk-blue shadow-lg shadow-ajk-blue/60"></div>
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-ajk-gold"></div>
+                  </M.div>
+
+                  {/* Logo */}
+                  <M.img
+                    src="assets/logo-NB.png"
+                    alt="Logo Association des Jeunes Al Kendi"
+                    className="relative max-w-[100%] max-h-[88%] w-auto h-auto object-contain drop-shadow-2xl animate-float"
+                    whileHover={{ scale: 1.03, rotate: 2 }}
+                    transition={{ type: 'spring', stiffness: 200 }}
+                  />
+                </div>
+              </M.div>
+            </div>
+          </Container>
+
+          {/* Scroll indicator */}
+          <div className="mt-16 flex justify-center" aria-hidden="true">
+            <div className="flex flex-col items-center gap-2 text-ajk-ink/40">
+              <span className="text-[10px] uppercase tracking-widest">Défiler</span>
+              <M.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
+                className="h-8 w-5 rounded-full border border-ajk-ink/30 flex items-start justify-center pt-1.5"
+              >
+                <span className="block h-1.5 w-1 rounded-full bg-ajk-ink/50"></span>
+              </M.div>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * MARQUEE of keywords
+     * ------------------------------------------------------------------ */
+    const MarqueeStrip = () => {
+      const items = [
+        'Intelligence Artificielle', 'Développement', 'Comptabilité & Gestion',
+        'Hackathons', 'Olympiades IA', 'Forum d\'orientation',
+        'Innovation', 'Mentorat', 'Impact social', 'Excellence académique'
+      ];
+      const double = [...items, ...items];
+      return (
+        <div className="relative overflow-hidden border-y border-ajk-ink/5 bg-gradient-to-r from-ajk-blue via-ajk-blueDk to-ajk-blue py-6">
+          <div className="marquee whitespace-nowrap">
+            {double.map((t, i) => (
+              <span key={i} className="flex items-center gap-12 text-white/90 text-lg font-display font-semibold">
+                {t}
+                <span className="text-ajk-greenLt" aria-hidden="true">◆</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * MISSION & VISION
+     * ------------------------------------------------------------------ */
+
+    const MissionVision = () => (
+      <section id="mission" aria-labelledby="mission-title" className="relative py-24 md:py-32">
+        <Container>
+          <Reveal>
+            <SectionEyebrow>Notre engagement</SectionEyebrow>
+            <h2 id="mission-title" className="mt-4 font-display text-3xl md:text-5xl font-bold text-ajk-ink max-w-3xl">
+              Former la génération qui fera<br/>la différence.
+            </h2>
+            <p className="mt-4 max-w-2xl text-lg text-ajk-ink/70">
+              L'AJK accompagne les étudiants du centre BTS Al Kendi dans leur développement
+              académique, professionnel et personnel — et mobilise ses partenaires autour d'initiatives à fort impact.
+            </p>
+          </Reveal>
+
+          <div className="mt-14 grid md:grid-cols-2 gap-6 md:gap-8">
+            {[
+              {
+                eyebrow: 'Mission',
+                title: 'Accompagner chaque talent.',
+                body: "Soutenir les étudiants, améliorer la qualité de la formation, renforcer la communication avec l'établissement, et encourager l'engagement associatif, l'esprit d'initiative et le bénévolat.",
+                color: 'from-ajk-green/20 to-ajk-greenLt/10',
+                accent: 'text-ajk-green',
+                icon: (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                  </svg>
+                )
+              },
+              {
+                eyebrow: 'Vision',
+                title: 'Référence en excellence & citoyenneté.',
+                body: "Former une génération responsable, engagée et compétente — en offrant un environnement stimulant favorisant épanouissement, créativité et participation à des initiatives nationales et internationales.",
+                color: 'from-ajk-blue/20 to-ajk-blueLt/10',
+                accent: 'text-ajk-blue',
+                icon: (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                  </svg>
+                )
+              }
+            ].map((c, i) => (
+              <Reveal key={i} delay={i * 0.1}>
+                <M.article
+                  whileHover={{ y: -6 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                  className={`group relative overflow-hidden rounded-3xl border border-ajk-ink/5 bg-white p-8 md:p-10 shadow-xl shadow-ajk-blue/5`}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${c.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} aria-hidden="true"></div>
+                  <div className="relative">
+                    <div className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${c.color} ${c.accent}`}>
+                      {c.icon}
+                    </div>
+                    <p className={`mt-6 text-xs font-bold uppercase tracking-widest ${c.accent}`}>{c.eyebrow}</p>
+                    <h3 className="mt-2 font-display text-2xl md:text-3xl font-bold text-ajk-ink">{c.title}</h3>
+                    <p className="mt-4 text-ajk-ink/70 leading-relaxed">{c.body}</p>
+                  </div>
+                </M.article>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Royal quote */}
+          <Reveal>
+            <figure className="mt-16 md:mt-24 relative overflow-hidden rounded-3xl bg-ajk-blue text-white p-8 md:p-12">
+              <div className="absolute -top-10 -right-10 h-64 w-64 rounded-full bg-ajk-green/30 blur-3xl" aria-hidden="true"></div>
+              <div className="relative">
+                <div className="text-ajk-greenLt font-display text-6xl leading-none" aria-hidden="true">"</div>
+                <blockquote className="mt-4 font-display text-lg md:text-2xl leading-relaxed max-w-4xl">
+                  Il s'agit, premier chef, de notre jeunesse ambitieuse, imprégnée d'amour pour sa patrie,
+                  fière de ses traditions séculaires, nantie d'une éducation saine.
+                </blockquote>
+                <figcaption className="mt-6 text-sm text-white/70">
+                  — Extrait du discours de Sa Majesté le Roi Mohammed VI, Skhirat, 2008.
+                </figcaption>
+              </div>
+            </figure>
+          </Reveal>
+        </Container>
+      </section>
+    );
+
+    /* ------------------------------------------------------------------
+     * FILIÈRES — the three tracks
+     * ------------------------------------------------------------------ */
+
+    const Filieres = () => {
+      const items = [
+        { code: 'IA',  name: "Développement de l'Intelligence Artificielle", color: 'bg-ajk-green', txt: 'text-ajk-green' },
+        { code: 'DAI', name: 'Développement des Applications Informatiques', color: 'bg-ajk-blue',  txt: 'text-ajk-blue' },
+        { code: 'C&G', name: 'Comptabilité & Gestion',                        color: 'bg-ajk-gold', txt: 'text-ajk-gold' },
+      ];
+      return (
+        <section className="py-20 md:py-28 bg-white">
+          <Container>
+            <Reveal>
+              <SectionEyebrow>Trois filières, une synergie</SectionEyebrow>
+              <h2 className="mt-4 font-display text-3xl md:text-4xl font-bold text-ajk-ink max-w-2xl">
+                Au carrefour de la tech, du code et du management.
+              </h2>
+            </Reveal>
+
+            <div className="mt-12 grid md:grid-cols-3 gap-6">
+              {items.map((f, i) => (
+                <Reveal key={i} delay={i * 0.1}>
+                  <M.div
+                    whileHover={{ y: -8, rotateX: 4, rotateY: -4 }}
+                    transition={{ type: 'spring', stiffness: 250 }}
+                    className="group relative rounded-3xl border border-ajk-ink/5 bg-ajk-paper p-8 overflow-hidden"
+                    style={{ transformStyle: 'preserve-3d' }}
+                  >
+                    <div className={`absolute -top-8 -right-8 h-40 w-40 rounded-full ${f.color} opacity-10 group-hover:opacity-20 transition-opacity blur-2xl`}></div>
+                    <div className={`font-display text-6xl font-bold ${f.txt} opacity-80`}>{f.code}</div>
+                    <h3 className="mt-4 font-display text-lg font-bold text-ajk-ink">{f.name}</h3>
+                    <div className={`mt-6 h-1 w-12 rounded-full ${f.color}`}></div>
+                  </M.div>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * ACTIVITIES (past)
+     * ------------------------------------------------------------------ */
+
+    const Activities = () => {
+      const items = [
+        { t: 'IAIO',                     s: 'Olympiade Internationale en Intelligence Artificielle',   icon: '🏆' },
+        { t: 'Sommet GAIN',              s: "Table ronde sur la gouvernance de l'IA et son impact éthique", icon: '🌐' },
+        { t: 'Conférences & Hackathons', s: 'Ateliers, rencontres avec des professionnels',            icon: '💡' },
+        { t: 'Encadrement',              s: "D'événements académiques, scientifiques et pédagogiques", icon: '🎓' },
+        { t: 'Engagement citoyen',       s: 'Visites d\'orphelinats, maisons de retraite, protection animale', icon: '🤝' },
+        { t: 'Actions de Ramadan',       s: 'Soutien solidaire aux personnes démunies',                icon: '🌙' },
+      ];
+      return (
+        <section id="activites" aria-labelledby="activities-title" className="py-24 md:py-32 bg-gradient-to-b from-ajk-paper via-white to-ajk-paper">
+          <Container>
+            <Reveal>
+              <SectionEyebrow>Ce que nous faisons déjà</SectionEyebrow>
+              <h2 id="activities-title" className="mt-4 font-display text-3xl md:text-5xl font-bold text-ajk-ink max-w-3xl">
+                Des initiatives concrètes, un impact mesurable.
+              </h2>
+            </Reveal>
+            <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {items.map((a, i) => (
+                <Reveal key={i} delay={i * 0.06}>
+                  <M.article
+                    whileHover={{ y: -4 }}
+                    className="group relative h-full rounded-2xl bg-white p-6 border border-ajk-ink/5 shadow-sm hover:shadow-xl hover:shadow-ajk-blue/10 transition-shadow"
+                  >
+                    <div className="text-3xl" aria-hidden="true">{a.icon}</div>
+                    <h3 className="mt-4 font-display text-lg font-bold text-ajk-ink">{a.t}</h3>
+                    <p className="mt-2 text-sm text-ajk-ink/70 leading-relaxed">{a.s}</p>
+                    <div className="mt-5 h-0.5 w-10 bg-ajk-green/70 group-hover:w-full transition-all duration-500"></div>
+                  </M.article>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * UPCOMING EVENTS
+     * ------------------------------------------------------------------ */
+
+    const Events = () => {
+      const events = [
+        {
+          tag: 'Conférence phare',
+          title: 'Synergie des Talents',
+          sub: 'IA, Digital & Management au service de l\'innovation',
+          desc: 'Réunit experts IA, développeurs, gestionnaires et entrepreneurs pour croiser les regards et faire naître les projets de demain.',
+          gradient: 'from-ajk-blue to-ajk-green'
+        },
+        {
+          tag: 'Compétition',
+          title: 'Al Kendi Innovation Challenge',
+          sub: 'Concours multidisciplinaire',
+          desc: 'Des projets évalués par un jury d\'experts, pour révéler les talents et récompenser l\'audace des équipes étudiantes.',
+          gradient: 'from-ajk-green to-ajk-greenLt'
+        },
+        {
+          tag: 'Atelier',
+          title: 'Data & Décision',
+          sub: 'De la donnée à l\'action',
+          desc: 'Apprendre à exploiter la donnée dans un contexte réel — de la conception du pipeline à la prise de décision stratégique.',
+          gradient: 'from-ajk-blueDk to-ajk-blue'
+        },
+        {
+          tag: 'Journée',
+          title: 'Pitch & Invest',
+          sub: 'Techniques & soft skills',
+          desc: "Développer les compétences de présentation, négociation et modélisation économique indispensables aux futurs leaders.",
+          gradient: 'from-ajk-gold to-amber-400'
+        },
+        {
+          tag: 'Orientation',
+          title: 'Forum d\'orientation',
+          sub: 'Choisir sa voie, avec des modèles.',
+          desc: "Séances d'information, conseil, et partage d'expériences avec des professionnels et anciens étudiants.",
+          gradient: 'from-ajk-green to-ajk-blue'
+        },
+      ];
+      return (
+        <section id="evenements" aria-labelledby="events-title" className="py-24 md:py-32 bg-ajk-ink text-white relative overflow-hidden">
+          <div className="absolute inset-0 opacity-30">
+            <div className="aurora-blob animate-aurora" style={{ top: '10%', left: '10%', width: '30vw', height: '30vw', background: 'radial-gradient(circle, #1FA35C88, transparent 70%)' }}></div>
+            <div className="aurora-blob animate-aurora" style={{ bottom: '5%', right: '10%', width: '35vw', height: '35vw', background: 'radial-gradient(circle, #2E4FB899, transparent 70%)', animationDelay: '-5s' }}></div>
+          </div>
+          <Container className="relative">
+            <Reveal>
+              <SectionEyebrow>Événements à réaliser — 2026</SectionEyebrow>
+              <h2 id="events-title" className="mt-4 font-display text-3xl md:text-5xl font-bold max-w-3xl">
+                Votre nom, associé à des moments qui comptent.
+              </h2>
+              <p className="mt-4 max-w-2xl text-lg text-white/70">
+                Chaque événement de l'AJK crée une visibilité forte, multicanale et durable
+                auprès d'un public qualifié d'étudiants, parents et enseignants.
+              </p>
+            </Reveal>
+
+            <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {events.map((e, i) => (
+                <Reveal key={i} delay={i * 0.06}>
+                  <M.article
+                    whileHover={{ y: -8 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                    className="group relative rounded-3xl p-[1.5px] overflow-hidden"
+                  >
+                    <div className={`absolute inset-0 bg-gradient-to-br ${e.gradient} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
+                    <div className="relative h-full rounded-[calc(1.5rem-1.5px)] bg-ajk-ink p-7">
+                      <span className="inline-block rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white/80">{e.tag}</span>
+                      <h3 className="mt-5 font-display text-2xl font-bold">{e.title}</h3>
+                      <p className="mt-1 text-sm text-white/60 italic">{e.sub}</p>
+                      <p className="mt-4 text-sm text-white/75 leading-relaxed">{e.desc}</p>
+                    </div>
+                  </M.article>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * SUSTAINABLE IMPACT
+     * ------------------------------------------------------------------ */
+
+    const Impact = () => {
+      const pillars = [
+        { t: 'Environnement', d: 'Verdissement d\'une école, conduites d\'eau d\'un village, plantations d\'arbres.', accent: 'bg-ajk-green' },
+        { t: 'Social',        d: 'Amélioration des conditions de vie de jeunes en situation difficile, solidarité face aux crises.', accent: 'bg-ajk-blue' },
+        { t: 'Santé',         d: 'Soutien aux jeunes en situation de handicap, mise aux normes d\'accessibilité.', accent: 'bg-ajk-gold' },
+        { t: 'Revenu',        d: 'Création d\'activités génératrices de revenus pour jeunes en situation défavorable.', accent: 'bg-ajk-greenDk' },
+      ];
+      return (
+        <section className="py-24 md:py-32 bg-white">
+          <Container>
+            <Reveal>
+              <SectionEyebrow>Projets à impact durable</SectionEyebrow>
+              <h2 className="mt-4 font-display text-3xl md:text-5xl font-bold text-ajk-ink max-w-3xl">
+                Le vrai bonheur consiste à<br/> <span className="gradient-text">rendre les autres heureux.</span>
+              </h2>
+              <p className="mt-4 max-w-2xl text-lg text-ajk-ink/70">
+                Quatre piliers alignés sur les objectifs de développement durable — votre sponsoring
+                s'inscrit dans des projets à impact positif, mesurable et long terme.
+              </p>
+            </Reveal>
+            <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {pillars.map((p, i) => (
+                <Reveal key={i} delay={i * 0.08}>
+                  <M.div
+                    whileHover={{ y: -6 }}
+                    className="group relative h-full rounded-3xl border border-ajk-ink/5 bg-ajk-paper p-6 overflow-hidden"
+                  >
+                    <div className={`absolute top-0 left-0 h-1 w-full ${p.accent}`}></div>
+                    <div className={`absolute -right-10 -bottom-10 h-32 w-32 rounded-full ${p.accent} opacity-10 blur-2xl group-hover:opacity-20 transition-opacity`}></div>
+                    <h3 className="font-display text-xl font-bold text-ajk-ink">{p.t}</h3>
+                    <p className="mt-3 text-sm text-ajk-ink/70 leading-relaxed">{p.d}</p>
+                  </M.div>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * SPONSORSHIP TIERS
+     * ------------------------------------------------------------------ */
+
+    const SponsorshipTiers = () => {
+      const tiers = [
+        {
+          name: 'Bronze',
+          sub: 'Partenaire Officiel',
+          price: 'Entre 5 000 et 10 000 DHs',
+          featured: false,
+          accent: 'from-amber-700/20 to-amber-500/10',
+          text: 'text-amber-700',
+          border: 'border-amber-700/30',
+          bg: 'bg-white',
+          goal: "Affirmer son engagement envers les initiatives étudiantes et soutenir les jeunes talents.",
+          perks: [
+            'Logo sur les affiches officielles',
+            'Attestation de sponsoring',
+            "Remerciements publics lors de l'événement",
+          ]
+        },
+        {
+          name: 'Silver',
+          sub: 'Partenaire Privilégié',
+          price: 'Entre 11 000 et 20 000 DHs',
+          featured: false,
+          accent: 'from-slate-400/20 to-slate-300/10',
+          text: 'text-slate-600',
+          border: 'border-slate-400/40',
+          bg: 'bg-white',
+          goal: "Accroître sa notoriété auprès d'un public jeune et dynamique et renforcer son image de marque.",
+          perks: [
+            'Tous les avantages Bronze',
+            'Mise en avant sur les réseaux sociaux',
+            'Certificat officiel de partenariat',
+          ]
+        },
+        {
+          name: 'Gold',
+          sub: 'Partenaire Principal',
+          price: 'Supérieur à 21 000 DHs',
+          featured: true,
+          accent: 'from-ajk-gold/40 to-amber-300/20',
+          text: 'text-ajk-gold',
+          border: 'border-ajk-gold',
+          bg: 'bg-gradient-to-br from-white to-amber-50',
+          goal: "Se positionner comme acteur clé de l'événement et bénéficier d'une visibilité maximale.",
+          perks: [
+            'Visibilité prioritaire du logo sur tous les supports',
+            "Mention spéciale durant l'événement",
+            'Attestation spéciale de sponsor majeur',
+          ]
+        },
+      ];
+
+      return (
+        <section id="sponsoring" aria-labelledby="tiers-title" className="relative py-24 md:py-32 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-ajk-paper via-white to-ajk-paper"></div>
+          <Container className="relative">
+            <Reveal>
+              <SectionEyebrow>Formules de sponsoring</SectionEyebrow>
+              <h2 id="tiers-title" className="mt-4 font-display text-3xl md:text-5xl font-bold text-ajk-ink max-w-3xl">
+                Trois formules, un seul objectif :<br/><span className="gold-shimmer">construire l'avenir ensemble.</span>
+              </h2>
+              <p className="mt-4 max-w-2xl text-lg text-ajk-ink/70">
+                Choisissez la formule qui correspond à vos ambitions et à votre engagement sociétal.
+                Toutes les formules incluent une attestation officielle et une visibilité sur nos supports.
+              </p>
+            </Reveal>
+
+            <div className="mt-14 grid md:grid-cols-3 gap-6 md:gap-5 items-stretch">
+              {tiers.map((t, i) => (
+                <Reveal key={t.name} delay={i * 0.1}>
+                  <M.article
+                    whileHover={{ y: -10 }}
+                    transition={{ type: 'spring', stiffness: 220 }}
+                    className={`relative h-full flex flex-col rounded-3xl ${t.bg} border-2 ${t.border} p-8 shadow-xl ${t.featured ? 'shadow-ajk-gold/20 tier-glow md:scale-105' : 'shadow-ajk-blue/5'}`}
+                  >
+                    {t.featured && (
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-ajk-gold to-amber-400 px-4 py-1 text-xs font-bold uppercase tracking-widest text-white shadow-lg">
+                        ⭐ Recommandé
+                      </span>
+                    )}
+                    <div>
+                      <div className={`inline-block rounded-full bg-gradient-to-br ${t.accent} px-4 py-1 text-xs font-bold uppercase tracking-widest ${t.text}`}>
+                        {t.sub}
+                      </div>
+                      <h3 className={`mt-3 font-display text-4xl font-bold ${t.featured ? 'gold-shimmer' : 'text-ajk-ink'}`}>
+                        Sponsor {t.name}
+                      </h3>
+                      <p className="mt-2 font-display text-2xl font-bold text-ajk-blue">{t.price}</p>
+                      <p className="mt-4 text-sm italic text-ajk-ink/60 leading-relaxed">{t.goal}</p>
+                    </div>
+                    <ul className="mt-8 space-y-3 flex-1">
+                      {t.perks.map((p, j) => (
+                        <li key={j} className="flex gap-3 text-sm text-ajk-ink/80">
+                          <span className={`mt-0.5 flex-none h-5 w-5 rounded-full bg-gradient-to-br ${t.accent} flex items-center justify-center`} aria-hidden="true">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className={t.text}><polyline points="20 6 9 17 4 12"/></svg>
+                          </span>
+                          <span>{p}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <a
+                      href="#contact"
+                      className={`mt-8 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold transition-all ${
+                        t.featured
+                          ? 'bg-gradient-to-r from-ajk-gold to-amber-400 text-white shadow-lg hover:shadow-xl'
+                          : 'bg-ajk-blue text-white hover:bg-ajk-blueDk'
+                      }`}
+                    >
+                      Choisir {t.name}
+                      <span aria-hidden="true">→</span>
+                    </a>
+                  </M.article>
+                </Reveal>
+              ))}
+            </div>
+
+            <Reveal>
+              <p className="mt-10 text-center text-sm text-ajk-ink/50">
+                Toutes les formules sont personnalisables. Contactez-nous pour construire un partenariat sur mesure.
+              </p>
+            </Reveal>
+          </Container>
+        </section>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * WHY SPONSOR — benefits
+     * ------------------------------------------------------------------ */
+
+    const Benefits = () => {
+      const items = [
+        { t: 'Visibilité événementielle forte', d: 'Grâce aux différents événements organisés tout au long de l\'année.' },
+        { t: 'Multi-établissements',            d: 'Présence dans plusieurs centres, élargissant la portée de votre communication.' },
+        { t: 'Public qualifié',                 d: 'Accès direct à un public d\'élèves, parents et enseignants engagés.' },
+        { t: 'Image valorisée',                 d: 'Votre marque associée à des activités éducatives et associatives.' },
+        { t: 'Networking & recrutement',        d: 'Rencontrez et identifiez de jeunes talents en devenir.' },
+        { t: 'Notoriété durable',               d: 'La répétition des événements ancre votre marque dans la durée.' },
+      ];
+      return (
+        <section className="py-24 md:py-32 bg-ajk-blue text-white relative overflow-hidden">
+          <div className="absolute inset-0 noise opacity-30"></div>
+          <Container className="relative">
+            <Reveal>
+              <SectionEyebrow><span className="text-ajk-greenLt">Pourquoi nous rejoindre ?</span></SectionEyebrow>
+              <h2 className="mt-4 font-display text-3xl md:text-5xl font-bold max-w-3xl">
+                Un positionnement stratégique au cœur d'un écosystème éducatif en pleine croissance.
+              </h2>
+            </Reveal>
+            <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {items.map((b, i) => (
+                <Reveal key={i} delay={i * 0.06}>
+                  <M.div
+                    whileHover={{ y: -4 }}
+                    className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm hover:bg-white/10 transition-colors"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex-none mt-1 h-8 w-8 rounded-lg bg-ajk-green/20 text-ajk-greenLt flex items-center justify-center" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>
+                      <div>
+                        <h3 className="font-display text-lg font-bold">{b.t}</h3>
+                        <p className="mt-1.5 text-sm text-white/75 leading-relaxed">{b.d}</p>
+                      </div>
+                    </div>
+                  </M.div>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * TEAM
+     * ------------------------------------------------------------------ */
+    const Team = () => {
+      const members = [
+        { r: 'Présidente',            n: 'Dr. Lamia ELJADIRI',    initials: 'LE' },
+        { r: 'Vice-présidente',       n: 'Pr. Amal EL ALAMA',      initials: 'AE' },
+        { r: 'Trésorière',            n: 'Pr. Assia FADIL',        initials: 'AF' },
+        { r: 'Trésorier adjoint',     n: 'Dr. Mohamed HOUSNI',     initials: 'MH' },
+        { r: 'Secrétaire générale',   n: 'Pr. Rachida ZATTI',      initials: 'RZ' },
+      ];
+      return (
+        <section className="py-24 md:py-32 bg-white">
+          <Container>
+            <Reveal>
+              <SectionEyebrow>Bureau exécutif</SectionEyebrow>
+              <h2 className="mt-4 font-display text-3xl md:text-4xl font-bold text-ajk-ink max-w-2xl">
+                Une équipe engagée, au service des étudiants.
+              </h2>
+            </Reveal>
+            <div className="mt-12 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+              {members.map((m, i) => (
+                <Reveal key={i} delay={i * 0.06}>
+                  <M.div
+                    whileHover={{ y: -6 }}
+                    className="rounded-2xl border border-ajk-ink/5 bg-ajk-paper p-6 text-center"
+                  >
+                    <div
+                      className="mx-auto h-16 w-16 rounded-full flex items-center justify-center font-display font-bold text-white text-lg"
+                      style={{
+                        background: 'linear-gradient(135deg, #1FA35C 0%, #2E4FB8 100%)'
+                      }}
+                      aria-hidden="true"
+                    >
+                      {m.initials}
+                    </div>
+                    <p className="mt-4 font-display font-bold text-ajk-ink text-sm">{m.n}</p>
+                    <p className="mt-1 text-xs uppercase tracking-widest text-ajk-ink/50">{m.r}</p>
+                  </M.div>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * CONTACT / CTA
+     * ------------------------------------------------------------------ */
+
+    const Contact = () => {
+      const [form, setForm] = useState({ org: '', name: '', email: '', tier: 'Gold', msg: '' });
+      const [sent, setSent] = useState(false);
+      const onSubmit = (e) => {
+        e.preventDefault();
+        setSent(true);
+        setTimeout(() => setSent(false), 5000);
+      };
+      return (
+        <section id="contact" aria-labelledby="contact-title" className="py-24 md:py-32 bg-ajk-paper">
+          <Container>
+            <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+              <div>
+                <Reveal>
+                  <SectionEyebrow>Contact</SectionEyebrow>
+                  <h2 id="contact-title" className="mt-4 font-display text-3xl md:text-5xl font-bold text-ajk-ink">
+                    Construisons ensemble<br/>
+                    <span className="gradient-text">un avenir porteur.</span>
+                  </h2>
+                  <p className="mt-5 text-lg text-ajk-ink/70 max-w-lg">
+                    Donner, ce n'est pas seulement offrir de l'argent, c'est partager une vision
+                    et soutenir un avenir. Écrivez-nous — nous revenons vers vous sous 48 h ouvrées.
+                  </p>
+                </Reveal>
+                <Reveal delay={0.15}>
+                  <div className="mt-10 space-y-4">
+                    <a href="mailto:contact@ajk.ma" className="group flex items-center gap-4 rounded-2xl bg-white p-5 border border-ajk-ink/5 hover:border-ajk-blue/30 transition-colors">
+                      <span className="flex-none h-12 w-12 rounded-xl bg-ajk-blue/10 text-ajk-blue flex items-center justify-center" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                      </span>
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-widest text-ajk-ink/50">Email</p>
+                        <p className="font-display font-bold text-ajk-ink">contact@ajk.ma</p>
+                      </div>
+                    </a>
+                    <a href="tel:+2126" className="group flex items-center gap-4 rounded-2xl bg-white p-5 border border-ajk-ink/5 hover:border-ajk-green/30 transition-colors">
+                      <span className="flex-none h-12 w-12 rounded-xl bg-ajk-green/10 text-ajk-green flex items-center justify-center" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                      </span>
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-widest text-ajk-ink/50">Téléphone</p>
+                        <p className="font-display font-bold text-ajk-ink">+212 6 • • •</p>
+                      </div>
+                    </a>
+                    <div className="flex items-center gap-4 rounded-2xl bg-white p-5 border border-ajk-ink/5">
+                      <span className="flex-none h-12 w-12 rounded-xl bg-ajk-gold/10 text-ajk-gold flex items-center justify-center" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 10c0 7-8 12-8 12s-8-5-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      </span>
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-widest text-ajk-ink/50">Contact principal</p>
+                        <p className="font-display font-bold text-ajk-ink">Dr. Lamia ELJADIRI — Présidente</p>
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
+              </div>
+
+              <Reveal delay={0.1}>
+                <form onSubmit={onSubmit} className="rounded-3xl bg-white p-8 md:p-10 border border-ajk-ink/5 shadow-xl shadow-ajk-blue/5" aria-label="Formulaire de demande de partenariat">
+                  <h3 className="font-display text-2xl font-bold text-ajk-ink">Demander un dossier</h3>
+                  <p className="mt-1 text-sm text-ajk-ink/60">Tous les champs marqués d'un * sont obligatoires.</p>
+
+                  <div className="mt-6 grid sm:grid-cols-2 gap-5">
+                    <label className="block">
+                      <span className="text-sm font-semibold text-ajk-ink">Organisation *</span>
+                      <input
+                        type="text" required
+                        value={form.org} onChange={e => setForm({ ...form, org: e.target.value })}
+                        className="mt-1.5 w-full rounded-xl border border-ajk-ink/10 bg-ajk-paper px-4 py-3 text-sm focus:border-ajk-blue focus:ring-2 focus:ring-ajk-blue/20 outline-none transition"
+                        placeholder="Nom de l'entreprise"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="text-sm font-semibold text-ajk-ink">Nom & prénom *</span>
+                      <input
+                        type="text" required
+                        value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
+                        className="mt-1.5 w-full rounded-xl border border-ajk-ink/10 bg-ajk-paper px-4 py-3 text-sm focus:border-ajk-blue focus:ring-2 focus:ring-ajk-blue/20 outline-none transition"
+                        placeholder="Votre nom"
+                      />
+                    </label>
+                  </div>
+
+                  <label className="mt-5 block">
+                    <span className="text-sm font-semibold text-ajk-ink">Email *</span>
+                    <input
+                      type="email" required
+                      value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
+                      className="mt-1.5 w-full rounded-xl border border-ajk-ink/10 bg-ajk-paper px-4 py-3 text-sm focus:border-ajk-blue focus:ring-2 focus:ring-ajk-blue/20 outline-none transition"
+                      placeholder="vous@organisation.com"
+                    />
+                  </label>
+
+                  <fieldset className="mt-5">
+                    <legend className="text-sm font-semibold text-ajk-ink">Formule souhaitée</legend>
+                    <div className="mt-2 grid grid-cols-3 gap-2">
+                      {['Bronze', 'Silver', 'Gold'].map(t => (
+                        <label key={t} className={`cursor-pointer rounded-xl border-2 px-4 py-3 text-center text-sm font-bold transition ${
+                          form.tier === t
+                            ? 'border-ajk-blue bg-ajk-blue text-white'
+                            : 'border-ajk-ink/10 bg-ajk-paper text-ajk-ink/70 hover:border-ajk-blue/30'
+                        }`}>
+                          <input
+                            type="radio" name="tier" value={t} className="sr-only"
+                            checked={form.tier === t}
+                            onChange={() => setForm({ ...form, tier: t })}
+                          />
+                          {t}
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+
+                  <label className="mt-5 block">
+                    <span className="text-sm font-semibold text-ajk-ink">Message</span>
+                    <textarea
+                      rows="4"
+                      value={form.msg} onChange={e => setForm({ ...form, msg: e.target.value })}
+                      className="mt-1.5 w-full rounded-xl border border-ajk-ink/10 bg-ajk-paper px-4 py-3 text-sm focus:border-ajk-blue focus:ring-2 focus:ring-ajk-blue/20 outline-none transition"
+                      placeholder="Parlez-nous de votre organisation et de vos ambitions…"
+                    />
+                  </label>
+
+                  <button
+                    type="submit"
+                    className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-full bg-ajk-blue px-6 py-4 font-semibold text-white shadow-lg shadow-ajk-blue/20 hover:bg-ajk-blueDk transition-all"
+                  >
+                    Envoyer ma demande
+                    <span aria-hidden="true">→</span>
+                  </button>
+
+                  <AP>
+                    {sent && (
+                      <M.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        role="status"
+                        className="mt-4 rounded-xl bg-ajk-green/10 text-ajk-greenDk p-4 text-sm font-medium"
+                      >
+                        ✓ Demande reçue (démo). Notre équipe reviendra vers vous rapidement.
+                      </M.div>
+                    )}
+                  </AP>
+                </form>
+              </Reveal>
+            </div>
+          </Container>
+        </section>
+      );
+    };
+
+    /* ------------------------------------------------------------------
+     * FOOTER
+     * ------------------------------------------------------------------ */
+    const Footer = () => (
+      <footer className="bg-ajk-ink text-white/80">
+        <Container>
+          <div className="py-12 grid md:grid-cols-2 gap-10 items-center">
+            <div className="flex items-center gap-4">
+              <img src="assets/logo-NB.png" alt="" className="h-14 w-auto" />
+              <div>
+                <p className="font-display font-bold text-white">Association des Jeunes Al Kendi</p>
+                <p className="text-sm text-white/60">Investir dans la jeunesse, c'est investir dans l'avenir.</p>
+              </div>
+            </div>
+            <nav aria-label="Navigation pied de page" className="flex flex-wrap gap-4 md:justify-end text-sm">
+              {NAV.map(n => (
+                <a key={n.href} href={n.href} className="hover:text-white transition-colors">{n.label}</a>
+              ))}
+            </nav>
+          </div>
+          <div className="border-t border-white/10 py-6 text-xs text-white/50 flex flex-wrap justify-between gap-2">
+            <p>© 2026 AJK — Association des Jeunes Al Kendi. Tous droits réservés.</p>
+            <p>Conçu avec soin. Accessibilité WCAG 2.1 AA.</p>
+          </div>
+        </Container>
+      </footer>
+    );
+
+    /* ------------------------------------------------------------------
+     * APP
+     * ------------------------------------------------------------------ */
+    const App = () => (
+      <>
+        <Header />
+        <main id="main">
+          <Hero />
+          <MarqueeStrip />
+          <MissionVision />
+          <Filieres />
+          <Activities />
+          <Events />
+          <Impact />
+          <SponsorshipTiers />
+          <Benefits />
+          <Team />
+          <Contact />
+        </main>
+        <Footer />
+      </>
+    );
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
+  
