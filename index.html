@@ -74,12 +74,8 @@
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Framer Motion — ESM import exposed as window global -->
-  <script type="module">
-    import * as FM from 'https://esm.sh/framer-motion@11.15.0?external=react,react-dom&bundle-deps';
-    window.FramerMotion = FM;
-    window.dispatchEvent(new Event('fm-ready'));
-  </script>
+  <!-- Framer Motion v10 — last version with UMD build -->
+  <script src="https://cdn.jsdelivr.net/npm/framer-motion@10.18.0/dist/framer-motion.js"></script>
 
   <style>
     html { scroll-behavior: smooth; }
@@ -301,9 +297,8 @@
   <script type="text/babel" data-presets="react">
     const { useState, useEffect, useRef, useId, forwardRef, createElement } = React;
 
-    // Resolve Framer Motion LAZILY — the ESM module sets window.FramerMotion
-    // after this script is parsed, so we read it at render/call time.
-    const getFM = () => window.FramerMotion || window.Motion || window.framerMotion || {};
+    // Resolve Framer Motion no matter which global it exposes, with a plain-HTML fallback
+    const FM = window.Motion || window.FramerMotion || window.framerMotion || {};
 
     // M proxy: M.div, M.article, M.img, ... → real motion component if available,
     // otherwise a passthrough plain element that ignores motion-only props.
@@ -330,17 +325,15 @@
     const passthroughCache = {};
     const M = new Proxy({}, {
       get: (_, tag) => {
-        const fm = getFM();
-        if (fm.motion && fm.motion[tag]) return fm.motion[tag];
+        if (FM.motion && FM.motion[tag]) return FM.motion[tag];
         if (!passthroughCache[tag]) passthroughCache[tag] = makePassthrough(tag);
         return passthroughCache[tag];
       }
     });
-    // Lazy wrappers — resolve from the global at call time, not parse time
-    const AP = (props) => { const C = getFM().AnimatePresence; return C ? createElement(C, props) : props.children; };
-    const useScrollFM = (...args) => { const fn = getFM().useScroll; return fn ? fn(...args) : { scrollYProgress: { get: () => 0 } }; };
-    const useTransformFM = (...args) => { const fn = getFM().useTransform; return fn ? fn(...args) : (args[2] ? args[2][0] : 0); };
-    const useInViewFM = (...args) => { const fn = getFM().useInView; return fn ? fn(...args) : true; };
+    const AP = FM.AnimatePresence || (({children}) => children);
+    const useScrollFM = FM.useScroll || (() => ({ scrollYProgress: { get: () => 0 } }));
+    const useTransformFM = FM.useTransform || ((v, i, o) => (o ? o[0] : 0));
+    const useInViewFM = FM.useInView || (() => true);
 
     /* ------------------------------------------------------------------
      * SMALL UI PRIMITIVES
@@ -1847,15 +1840,7 @@
       </>
     );
 
-    // Wait for Framer Motion ESM module to load before mounting
-    const mount = () => ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    if (window.FramerMotion) {
-      mount();
-    } else {
-      window.addEventListener('fm-ready', mount, { once: true });
-      // Fallback: mount anyway after 4s if CDN is slow
-      setTimeout(() => { if (!window.FramerMotion) mount(); }, 4000);
-    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
 </body>
 </html>
